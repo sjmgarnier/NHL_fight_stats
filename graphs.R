@@ -69,7 +69,7 @@ ggplot(fightDB) +
   geom_line(data = filter(fightDB, !is.na(reg)),
             aes(x = year,
                 y = reg, 
-                color = "2 - Regular"), 
+                color = "2 - Regular season"), 
             size = 1) +
   geom_line(data = filter(fightDB, !is.na(playoffs)),
             aes(x = year,
