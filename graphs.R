@@ -32,7 +32,7 @@ g <- rasterGrob(img, interpolate = TRUE)
 fightDB <- fread("fightDB.csv")
 
 #+ plot1, echo=FALSE
-ggplot() +
+ggplot(fightDB) +
   theme_minimal(base_size = 18) +
   theme(legend.position=c(0.2, 0.9)) + 
   labs(color = NULL,
@@ -52,7 +52,8 @@ ggplot() +
             aes(x = year,
                 y = playoffs.perG, 
                 color = "3 - Playoffs"), 
-            size = 1) 
+            size = 1) +
+  annotation_custom(g, 1920, 1970, 0.2, 2.3)
 
 #+ plot2, echo=FALSE
 ggplot(fightDB) +
