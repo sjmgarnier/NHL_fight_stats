@@ -29,7 +29,7 @@ img <- readPNG("hockey_lego.png")
 g <- rasterGrob(img, interpolate = TRUE)
 
 #+ load.data, echo=FALSE
-fightDB <- fread("fightDB.csv")
+fightDB <- fread("fightDB_NHL.csv")
 
 #+ plot1, echo=FALSE
 ggplot(fightDB) +

@@ -41,4 +41,4 @@ fightDB <- fightDB %.%
          playoffs.perG = as.numeric(gsub("[^0-9.]", "", xpathSApply(HTMLs[[ID]], "//td/descendant::text()[contains(., 'Playoffs')]/following::text()[contains(., 'per game')]", xmlValue)[1])))
 
 #+ save, echo=FALSE
-write.csv(fightDB, "fightDB.csv")
+write.csv(fightDB, "fightDB_NHL.csv")
