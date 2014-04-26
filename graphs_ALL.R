@@ -78,7 +78,7 @@ ggplot(tmp,
   ggtitle("Average violence\nin various hockey leagues (2004-2014)") +
   geom_bar(stat = "identity", color = "white") +
   annotation_custom(g, -10, 40, 0, 5) +
-  annotate("text", x = 10, y = 5, label = "Data source: http://dropyourgloves.com/", angle = 90, size = 5)
+  annotate("text", x = 0, y = 5.25, label = "Data source: http://dropyourgloves.com/", angle = 90, size = 5, hjust = 0)
   
   
 
