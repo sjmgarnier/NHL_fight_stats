@@ -21,13 +21,19 @@
 require("data.table")
 require("dplyr")
 require("ggplot2")
-require("ggthemes")
 library("png")
 library("grid")
+if (!require("graphZoo")) {
+  require("devtools")
+  install_github("morpionZ/graphZoo")
+  require("graphZoo")
+}
+require("extrafont")
+loadfonts()
 
 #+ load.img, echo=FALSE
-img <- readPNG("fight.png")
-g <- rasterGrob(img, interpolate = TRUE)
+img <- readPNG("fight2.png")
+img.grob <- rasterGrob(img, interpolate = TRUE)
 
 #+ load.data, echo=FALSE
 fightDB <- fread("fightDB_ALL.csv")
@@ -37,24 +43,28 @@ fightDB.top10 <- subset(fightDB,
                         name == "AHL" | name == "QMJHL" | name == "NLA" | 
                           name == "OHL" | name == "SkEL" | name == "CzEL"| 
                           name == "FEL" | name == "SEL" | name == "KHL" | 
-                          name == "NHL")
-fightDB.top10$name <- factor(fightDB.top10$name, levels = c("NHL", "KHL", "SEL", 
-                                                            "FEL", "CzEL", "SkEL", 
-                                                            "OHL", "NLA", "QMJHL",
-                                                            "AHL"))
-ggplot(fightDB.top10,
-       aes(x = season,
-           y = ratio,
-           color = name)) +
-  theme_minimal(base_size = 18) +
+                          name == "NHL") %>%
+  mutate(name = factor(name, levels = c("NHL", "KHL", "SEL", 
+                                        "FEL", "CzEL", "SkEL", 
+                                        "OHL", "NLA", "QMJHL",
+                                        "AHL")))
+
+g <- ggplot(fightDB.top10,
+            aes(x = season,
+                y = ratio,
+                color = name)) +
   xlim(1980, 2013) +
   xlab("Season") +
   ylab("Fights/Game") +
   ggtitle("Violence in Top 10 hockey leagues") +
   guides(color = guide_legend(title = "League")) +
   geom_hline(yintercept = 1, linetype = 2) +
-  geom_line(size = 1.5)
+  geom_line(size = 1.5) + 
+  theme_graphzoo(base_size = 28, family = "Open Sans Condensed Light") 
   
+g <- addBanner(g, font.size = 5.83,
+               l.txt = "GRAPHZOO.TUMBLR.COM", r.txt = "SOURCE: EIA, FRED")
+
 #+ plot2, echo=FALSE
 tmp <- fightDB %.%
   filter(season >= 2004) %.%
@@ -62,25 +72,31 @@ tmp <- fightDB %.%
   summarize(mean = mean(ratio)) %.%
   mutate(name = factor(name, levels = name[order(mean)]))
 
-ggplot(tmp,
+subtitle <- "(2004 - 2014)"
+
+g <- ggplot(tmp,
        aes(x = name,
            y = mean,
            fill = name)) +
-  theme_minimal() +
-  theme(axis.title = element_text(size = 18, face = "bold"),
-        axis.title.x = element_text(vjust = 0),
-        axis.text.x = element_text(face = "bold"),
-        plot.title = element_text(size = 18, face = "bold", vjust = 2)) +
+  theme_graphzoo(base_size = 24, family = "Open Sans Condensed Bold")  +
+  theme(axis.text.y = element_text(size = 12)) +
   coord_flip() +
   xlab("League") +
   ylab("Fights/Game") +
   guides(fill = FALSE) +
-  ggtitle("Average violence\nin various hockey leagues (2004-2014)") +
+  #ggtitle("Violence in various hockey leagues") +
   geom_bar(stat = "identity", color = "white") +
-  annotation_custom(g, -10, 40, 0, 5) +
-  annotate("text", x = 0, y = 5.25, label = "Data source: http://dropyourgloves.com/", angle = 90, size = 5, hjust = 0)
-  
-  
+  annotation_custom(img.grob, -10, 40, 0.25, 5.75) +
+  ggtitle(bquote(atop("Violence in various hockey leagues", 
+                      atop(italic(.(subtitle)), ""))))
+
+g <- addBanner(g, font.size = 5.83, heights = c(1, 0.05 * 700 / 1200),
+               l.txt = "GRAPHZOO.TUMBLR.COM", r.txt = "SOURCE: DROPYOURGLOVES.COM")
+
+png("ALL_number_of_fights_per_game.png", width = 700, height = 1200, bg = "#F0F0F0")
+g
+dev.off()
+
 
 
 
