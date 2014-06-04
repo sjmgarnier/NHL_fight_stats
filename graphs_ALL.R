@@ -86,11 +86,11 @@ g <- ggplot(tmp,
   guides(fill = FALSE) +
   #ggtitle("Violence in various hockey leagues") +
   geom_bar(stat = "identity", color = "white") +
-  annotation_custom(img.grob, -10, 40, 0.25, 5.75) +
+  annotation_custom(img.grob, -12, 40, 0.25, 5.75) +
   ggtitle(bquote(atop("Violence in various hockey leagues", 
                       atop(italic(.(subtitle)), ""))))
 
-g <- addBanner(g, font.size = 5.83, heights = c(1, 0.05 * 700 / 1200),
+g <- addBanner(g, font.size = 5.83, heights = c(1, 0.05 * 700 / 1200), family = "Open Sans Condensed Bold",
                l.txt = "GRAPHZOO.TUMBLR.COM", r.txt = "SOURCE: DROPYOURGLOVES.COM")
 
 png("ALL_number_of_fights_per_game.png", width = 700, height = 1200, bg = "#F0F0F0")
